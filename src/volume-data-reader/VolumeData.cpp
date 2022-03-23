@@ -13,9 +13,11 @@ void read_inf_file(VolumeData& vd, const std::string& file)
     auto const& voxelNode = tbl["voxel"];
 
     vd.info.inf_file = file;
+
     // Relative path to the inf file
-    vd.info.raw_file = fs::path(file).parent_path()
-        / tbl["raw_file"].value_or(fs::path(file).filename().replace_extension(".raw").string());
+    auto inf_parent_dir = fs::path(file).parent_path();
+    auto raw_name = tbl["raw_file"].value_or(fs::path(file).filename().replace_extension(".raw").string());
+    vd.info.raw_file = (inf_parent_dir / raw_name).string();
 
     vd.info.resolution.x = resoNode["x"].value_or<int>(0);
     vd.info.resolution.y = resoNode["y"].value_or<int>(0);
